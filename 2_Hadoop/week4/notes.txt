@@ -1,0 +1,86 @@
+lesson 1:
+
+//edit/create file
+gedit wordcount_mapper.py
+gedit wordcount_reducer.py
+
+//display file content
+more wordcount_mapper.py
+more wordcount_reducer.py
+
+//make it executable
+chmod +x wordcount_mapper.py
+chmod +x wordcount_reducer.py
+
+Enter the following to see what directory you are in
+
+> pwd
+
+Create some data:
+
+> echo "A long time ago in a galaxy far far away" > /home/cloudera/testfile1
+
+> echo "Another episode of Star Wars" > /home/cloudera/testfile2
+
+//Create a directory on the HDFS file system (if already exists that’s OK):
+
+hdfs dfs -mkdir /user/cloudera/input
+
+//Copy the files from local filesystem to the HDFS filesystem:
+
+hdfs dfs -put /home/cloudera/testfile1 /user/cloudera/input
+
+//see your files on HDFS
+
+hdfs dfs -ls /user/cloudera/input
+
+//Run the Hadoop WordCount example with the input and output specified
+//The ‘\’ just means the command continues on next line.
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+   -input /user/cloudera/input \
+   -output /user/cloudera/output_new \
+   -mapper /home/cloudera/wordcount_mapper.py \
+   -reducer /home/cloudera/wordcount_reducer.py
+
+ //Check the output file to see the results:
+
+hdfs dfs -cat /user/cloudera/output_new/part-00000
+
+//change the number of reduce tasks 
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+   -input /user/cloudera/input \
+   -output /user/cloudera/output_new_0 \
+   -mapper /home/cloudera/wordcount_mapper.py \
+   -reducer /home/cloudera/wordcount_reducer.py \
+   -numReduceTasks 0
+
+ //debug
+ cat testfile1 | ./<mapper.py> | sort
+ cat testfile* | ./<mapper.py> | sort | ./<reducer.py>
+
+
+lesson 2 - join:
+
+Don’t forget to enter the following at the unix prompt to make it executable
+
+> chmod +x join1_mapper.py 
+> chmod +x join1_reducer.py
+
+//test
+> cat join1_File*.txt | ./join1_mapper.py | sort | ./join1_reducer.py
+
+> hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+   -input /user/cloudera/input_join \
+   -output /user/cloudera/output_join \   
+   -mapper /home/cloudera/join1_mapper.py \   
+   -reducer /home/cloudera/join1_reducer.py
+
+//make some data
+> sh make_data_join2.txt
+
+> hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
+   -input /user/cloudera/input_join2 \
+   -output /user/cloudera/output_join2 \   
+   -mapper /home/cloudera/join2_mapper.py \   
+   -reducer /home/cloudera/join2_reducer.py \
+   -numReduceTasks 1
