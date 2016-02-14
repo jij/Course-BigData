@@ -1,0 +1,73 @@
+lesson 2
+
+fileA = sc.textFile("input/join1_FileA.txt")
+
+fileA.collect()
+Out[]: [u'able,991', u'about,11', u'burger,15', u'actor,22']
+
+fileB = sc.textFile("input/join1_FileB.txt")
+
+fileB.collect()
+Out[29]: 
+[u'Jan-01 able,5',
+ u'Feb-02 about,3',
+ u'Mar-03 about,8 ',
+ u'Apr-04 able,13',
+ u'Feb-22 actor,3',
+ u'Feb-23 burger,5',
+ u'Mar-08 burger,2',
+ u'Dec-15 able,100']
+
+def split_fileA(line):
+   # split the input line in word and count on the comma
+   keyvalue = line.split(",")
+   word = keyvalue[0]
+   # turn the count to an integer  
+   count = int(keyvalue[1])
+   return (word, count)
+
+//test
+test_line = "able,991"
+split_fileA(test_line)
+Out[]: ('able', 991)
+
+fileA_data = fileA.map(split_fileA)
+
+fileA_data.collect()
+Out[]: [(u'able', 991), (u'about', 11), (u'burger', 15), (u'actor', 22)]
+
+def split_fileB(line):
+    # split the input line into word, date and count_string
+    keyvalue = line.split(",")
+    key = keyvalue[0].split()
+    date = key[0]
+    word = key[1]
+    count_string = keyvalue[1]
+    return (word, date + " " + count_string) 
+
+fileB_data = fileB.map(split_fileB)
+
+fileB_data.collect()
+
+Out[]: 
+[(u'able', u'Jan-01 5'),
+ (u'about', u'Feb-02 3'),
+ (u'about', u'Mar-03 8 '),
+ (u'able', u'Apr-04 13'),
+ (u'actor', u'Feb-22 3'),
+ (u'burger', u'Feb-23 5'),
+ (u'burger', u'Mar-08 2'),
+ (u'able', u'Dec-15 100')]
+
+fileB_joined_fileA = fileB_data.join(fileA_data)
+
+fileB_joined_fileA.collect()
+
+************
+* lesson 3 *
+************
+
+
+
+
+
