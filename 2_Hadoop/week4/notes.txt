@@ -54,6 +54,10 @@ hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar \
    -reducer /home/cloudera/wordcount_reducer.py \
    -numReduceTasks 0
 
+//get file to local
+> hdfs dfs -getmerge /user/cloudera/output_new_0/* wordcount_num0_output.txt
+
+
  //debug
  cat testfile1 | ./<mapper.py> | sort
  cat testfile* | ./<mapper.py> | sort | ./<reducer.py>
