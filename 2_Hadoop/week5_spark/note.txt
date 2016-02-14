@@ -1,4 +1,6 @@
-lesson 2
+************
+* lesson 2 *
+************
 
 fileA = sc.textFile("input/join1_FileA.txt")
 
@@ -66,6 +68,33 @@ fileB_joined_fileA.collect()
 ************
 * lesson 3 *
 ************
+
+actions
+
+collect() - copy all elements
+take(n) - copy first n elements
+reduce(func) - aggregate with a func (take 2 elements, returns 1)
+saveAsTextFile(filename) - save to local or HDFS
+
+cache() to cache the RDD - to memory (or to disk or both) - speedup - is gradual (part is cached) - is fault tolerant
+unpersist() to remove cache
+
+config = sc.broadcast({"order":3, "filter":True})
+-broadcast var - transfer once per executer and use peer to peer - shared by multiple processes in executor - useful for large var, lookup data etc
+
+accum = sc.accumulator(0)  --0 as init value
+-sharable/updatable var across cluster nodes
+
+def test_accum(x):
+	accum.add(x)
+sc.parallelize([1,2,3,4]).foreach(test_accum)
+accum.value  
+
+foreach - similar as map, but doesn't return
+
+
+---assignment----
+
 
 
 
